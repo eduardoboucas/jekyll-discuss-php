@@ -84,7 +84,6 @@ git config user.name ${GIT_USER}
 git config user.email ${GIT_EMAIL}
 git remote rm origin
 git remote add origin https://${GIT_USERNAME}:${TOKEN}@github.com/${GIT_REPO_REMOTE}
-git status
 git pull origin master
 git add ${COMMENT_FILE}
 git commit -m "Automatic upload of comment"
