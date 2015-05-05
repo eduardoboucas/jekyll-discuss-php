@@ -17,10 +17,10 @@ $app->post('/comments', function () use ($app) {
 
     // We're looking for the honey pot field and testing mandatory fields
     if ((isset($data['company'])) ||
-        (!isset($data['name'])) || 
-        (!isset($data['email'])) || 
-        (!isset($data['message'])) || 
-        (!isset($data['post']))) 
+        (!isset($data['name'])) ||
+        (!isset($data['email'])) ||
+        (!isset($data['message'])) ||
+        (!isset($data['post'])))
     {
         echo('Aborting...');
         return;
@@ -37,9 +37,8 @@ $app->post('/comments', function () use ($app) {
     if (isset($data['url'])) {
         $shellCommand .= ' --url ' . escapeshellarg($data['url']);
     }
-    
-    $output = exec($shellCommand);
-    var_dump($output);
+
+    exec($shellCommand, $output);
 });
 
 $app->run();

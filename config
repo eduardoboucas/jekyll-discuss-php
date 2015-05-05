@@ -1,4 +1,6 @@
+GIT_USERNAME="eduardoboucas"
 GIT_REPO="site-test"
+GIT_REMO_REMOTE="eduardoboucas/test-repo.git"
 GIT_USER="Eduardo Boucas"
 GIT_EMAIL="mail@eduardoboucas.com"
 

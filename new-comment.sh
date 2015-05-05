@@ -82,9 +82,10 @@ printf "$FILE" > $COMMENT_FILE
 # Prepare Git and commit file
 git config user.name ${GIT_USER}
 git config user.email ${GIT_EMAIL}
-git config credential.helper "store --file=.git/credentials"
-echo "https://${TOKEN}:@github.com" > .git/credentials
+git remote rm origin
+git remote add origin https://${GIT_USERNAME}:${TOKEN}@github.com/${GIT_REPO_REMOTE}
+git status
+git pull origin master
 git add ${COMMENT_FILE}
 git commit -m "Automatic upload of comment"
-git push origin master
-rm .git/credentials
+git push --quiet origin master > /dev/null 2>&1
