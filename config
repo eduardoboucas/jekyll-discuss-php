@@ -1,0 +1,6 @@
+GIT_REPO="site-test"
+GIT_USER="Eduardo Boucas"
+GIT_EMAIL="mail@eduardoboucas.com"
+
+COMMENTS_DIR_FORMAT="_data/comments/@post-slug"
+COMMENTS_FILE_FORMAT="@timestamp-@hash.yml"
