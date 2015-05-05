@@ -22,7 +22,7 @@ $app->post('/comments', function () use ($app) {
         (!isset($data['message'])) || 
         (!isset($data['post']))) 
     {
-        echo(0);
+        echo('Aborting...');
         return;
     }
 
@@ -39,6 +39,7 @@ $app->post('/comments', function () use ($app) {
     }
     
     $output = exec($shellCommand);
+    var_dump($output);
 });
 
 $app->run();
