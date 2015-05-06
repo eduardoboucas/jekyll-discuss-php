@@ -15,14 +15,18 @@ $app = new \Slim\Slim();
 $app->post('/comments', function () use ($app) {
     $data = $app->request()->post();
 
-    // We're looking for the honey pot field and testing mandatory fields
-    if ((isset($data['company'])) ||
-        (!isset($data['name'])) ||
+    // Checking for the honey pot
+    if ((isset($data['company'])) && (!empty($data['company']))) {
+        return;
+    }
+
+    // Checking for mandatory fields
+    if ((!isset($data['name'])) ||
         (!isset($data['email'])) ||
         (!isset($data['message'])) ||
         (!isset($data['post'])))
     {
-        echo('Aborting...');
+        echo('Mandatory fields are missing.');
         return;
     }
 
