@@ -21,16 +21,26 @@ All the information about this project is described in [this blog post](https://
 
 **4.** Edit the `config` file with the following parameters:
 
-| variable               | role                                            | variables
-|------------------------|-------------------------------------------------|-----------------------|
-| GIT_USERNAME           |  Your GitHub username                           |                       |
-| GIT_REPO               |  The relative path to the repository folder     |                       |
-| GIT_REPO_REMOTE        |  The GitHub path to the repository              |                       |
-| GIT_USER               |  The name to appear in the commits              |                       |
-| GIT_EMAIL              |  The email address to appear in the commits     |                       |
-| COMMENTS_DIR_FORMAT    |  Path and format for the comments directory     | `@post-slug`          |
-| COMMENTS_FILE_FORMAT   |  Path and format for the comments files         | `@timestamp`, `@hash` | 
+| variable                 | role                                            | variables             |
+|--------------------------|-------------------------------------------------|-----------------------|
+| `GIT_USERNAME`           |  Your GitHub username                           |                       |
+| `GIT_REPO`               |  The relative path to the repository folder     |                       |
+| `GIT_REPO_REMOTE`        |  The GitHub path to the repository              |                       |
+| `GIT_USER`               |  The name to appear in the commits              |                       |
+| `GIT_EMAIL`              |  The email address to appear in the commits     |                       |
+| `COMMENTS_DIR_FORMAT`    |  Path and format for the comments directory     | `@post-slug`          |
+| `COMMENTS_FILE_FORMAT`   |  Path and format for the comments files         | `@timestamp`, `@hash` | 
 
 **5.** Create a personal access token on GitHub and write it to `.gittoken`
 
 `echo {THE-TOKEN} > .gittoken`
+
+**6.** Edit the fields and the validation in `index.php` to fit your needs
+
+**7.** POST your form data to `index.php`
+
+You should be good to go! Ping me on [Twitter](https://twitter.com/eduardoboucas) if you have any questions.
+
+## Contributing
+
+I need help! If you think this approach to a commenting system for Jekyll is interesting, share your ideas and pull requests and let's make it better.
