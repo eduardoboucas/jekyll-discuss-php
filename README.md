@@ -1,4 +1,9 @@
 # Jekyll Discuss
+A commenting system for Jekyll
+
+## Introduction
+
+All the information about this project is described in [this blog post](https://eduardoboucas.com/blog/2015/05/11/rethinking-the-commenting-system-for-my-jekyll-site.html).
 
 ## Installation
 
@@ -8,9 +13,9 @@
 
 **2.** Clone your GitHub repository to a sub-directory of `jekyll-discuss`
 
-**3.** Give permissions to the directory so that your web server's group can write to it
+**3.** Give permissions to the main directory so that your web server's group can write to it
 
-e.g. if your user is `ec2-user` and your web server is on the group `apache`
+> e.g. if your user is `ec2-user` and your web server is on the group `apache`
 
 `sudo chown -R ec2-user:apache jekyll-discuss`
 
