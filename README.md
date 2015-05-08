@@ -1,5 +1,5 @@
 # Jekyll Discuss
-A commenting system for Jekyll
+> A commenting system for Jekyll
 
 ## Introduction
 
