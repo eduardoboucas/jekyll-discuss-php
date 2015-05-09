@@ -52,6 +52,7 @@ $app->post('/comments', function () use ($app) {
     exec($shellCommand, $output);
 
     $response['hash'] = $emailHash;
+    $response['date'] = date('Y/m/d H:i:s');
     $response['message'] = $message;
 
     echo(json_encode($response));
