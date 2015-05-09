@@ -30,7 +30,7 @@ $app->post('/comments', function () use ($app) {
         return;
     }
 
-    $date = date('Y/m/d H:i:s');
+    $date = date('M d, Y, g:i a');
 
     // Create email hash
     $emailHash = md5(trim(strtolower($data['email'])));
