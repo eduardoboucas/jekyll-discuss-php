@@ -30,6 +30,8 @@ $app->post('/comments', function () use ($app) {
         return;
     }
 
+    $date = date('Y/m/d H:i:s');
+
     // Create email hash
     $emailHash = md5(trim(strtolower($data['email'])));
 
@@ -41,6 +43,7 @@ $app->post('/comments', function () use ($app) {
 
     $shellCommand = './new-comment.sh';
     $shellCommand .= ' --name ' . escapeshellarg($data['name']);
+    $shellCommand .= ' --date ' . escapeshellarg($date);
     $shellCommand .= ' --hash \'' . $emailHash . '\'';
     $shellCommand .= ' --post ' . escapeshellarg($data['post']);
     $shellCommand .= ' --message ' . escapeshellarg($message);
@@ -52,7 +55,7 @@ $app->post('/comments', function () use ($app) {
     exec($shellCommand, $output);
 
     $response['hash'] = $emailHash;
-    $response['date'] = date('Y/m/d H:i:s');
+    $response['date'] = $date;
     $response['message'] = $message;
 
     echo(json_encode($response));

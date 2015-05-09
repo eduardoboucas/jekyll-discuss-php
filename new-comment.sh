@@ -12,6 +12,10 @@ case $key in
     NAME="$2"
     shift
     ;;
+    -d|--date)
+    DATE="$2"
+    shift
+    ;;    
     -e|--email)
     EMAIL="$2"
     shift
@@ -48,7 +52,7 @@ TOKEN=`cat .gittoken`
 # Read config file
 source config
 
-FILE="name: ${NAME}\nhash: ${EMAIL_HASH}\n"
+FILE="name: ${NAME}\ndate: ${DATE}\nhash: ${EMAIL_HASH}\n"
 
 if [ ! -z "$URL" ]; then
     FILE=${FILE}"url: ${URL}\n"
