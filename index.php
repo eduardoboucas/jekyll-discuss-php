@@ -34,8 +34,10 @@ $app->post('/comments', function () use ($app) {
     $emailHash = md5(trim(strtolower($data['email'])));
 
     // Parse markdown
-    $Parsedown = new Parsedown();
-    $message = escapeshellarg($Parsedown->text($data['message']));
+    $message = Parsedown::instance()
+                ->setMarkupEscaped(true)
+                ->setUrlsLinked(false)
+                ->text(escapeshellarg($data['message']));
 
     $shellCommand = './new-comment.sh';
     $shellCommand .= ' --name ' . escapeshellarg($data['name']);
