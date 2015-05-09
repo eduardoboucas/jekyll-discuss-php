@@ -7,19 +7,22 @@ All the information about this project is described in [this blog post](https://
 
 ## Installation
 
-**1.** Install dependencies with Composer
+> Before you start the installation, you need to know the primary group of your web server's user. If you're using Apache, try `groups apache` our `groups www`. For these instructions, we'll use `apache` as the web server's group and `ec2-user` as the regular user.
+
+1. Install dependencies with Composer
 
 `composer install`
 
-**2.** Clone your GitHub repository to a sub-directory of `jekyll-discuss`
+2. Clone your GitHub repository and give your web server write permissions
 
-**3.** Give permissions to the main directory so that your web server's group can write to it
+`sudo chgrp -R apache YOUR-REPO`
+`sudo chmod -R 774 YOUR-REPO`
 
-> e.g. if your user is `ec2-user` and your web server is on the group `apache`
+3. Add your user to the group used by the web server so you can read and access the files
 
-`sudo chown -R ec2-user:apache jekyll-discuss`
+`sudo usermod -a -G apache ec2-user`
 
-**4.** Edit the `config` file with the following parameters:
+4. Edit the `config` file with the following parameters:
 
 | variable                 | role                                            | variables             |
 |--------------------------|-------------------------------------------------|-----------------------|
@@ -31,13 +34,13 @@ All the information about this project is described in [this blog post](https://
 | `COMMENTS_DIR_FORMAT`    |  Path and format for the comments directory     | `@post-slug`          |
 | `COMMENTS_FILE_FORMAT`   |  Path and format for the comments files         | `@timestamp`, `@hash` | 
 
-**5.** Create a personal access token on GitHub and write it to `.gittoken`
+5. Create a personal access token on GitHub and write it to `.gittoken`
 
 `echo {THE-TOKEN} > .gittoken`
 
-**6.** Edit the fields and the validation in `index.php` to fit your needs
+6. Edit the fields and the validation in `index.php` to fit your needs
 
-**7.** POST your form data to `index.php`
+7. POST your form data to `index.php`
 
 You should be good to go! Ping me on [Twitter](https://twitter.com/eduardoboucas) if you have any questions.
 
