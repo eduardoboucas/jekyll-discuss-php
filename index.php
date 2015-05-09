@@ -37,13 +37,13 @@ $app->post('/comments', function () use ($app) {
     $message = Parsedown::instance()
                 ->setMarkupEscaped(true)
                 ->setUrlsLinked(false)
-                ->text(escapeshellarg($data['message']));
+                ->text($data['message']);
 
     $shellCommand = './new-comment.sh';
     $shellCommand .= ' --name ' . escapeshellarg($data['name']);
     $shellCommand .= ' --hash \'' . $emailHash . '\'';
     $shellCommand .= ' --post ' . escapeshellarg($data['post']);
-    $shellCommand .= ' --message ' . $message;
+    $shellCommand .= ' --message ' . escapeshellarg($message);
 
     if (isset($data['url'])) {
         $shellCommand .= ' --url ' . escapeshellarg($data['url']);
