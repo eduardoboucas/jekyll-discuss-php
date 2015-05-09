@@ -30,19 +30,29 @@ $app->post('/comments', function () use ($app) {
         return;
     }
 
+    // Create email hash
     $emailHash = md5(trim(strtolower($data['email'])));
+
+    // Parse markdown
+    $Parsedown = new Parsedown();
+    $message = escapeshellarg($Parsedown->text($data['message']));
 
     $shellCommand = './new-comment.sh';
     $shellCommand .= ' --name ' . escapeshellarg($data['name']);
     $shellCommand .= ' --hash \'' . $emailHash . '\'';
     $shellCommand .= ' --post ' . escapeshellarg($data['post']);
-    $shellCommand .= ' --message ' . escapeshellarg($data['message']);
+    $shellCommand .= ' --message ' . $message;
 
     if (isset($data['url'])) {
         $shellCommand .= ' --url ' . escapeshellarg($data['url']);
     }
 
     exec($shellCommand, $output);
+
+    $response['hash'] = $emailHash;
+    $response['message'] = $message;
+
+    echo(json_encode($response));
 });
 
 $app->run();

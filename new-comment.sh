@@ -80,11 +80,11 @@ fi
 printf "$FILE" > $COMMENT_FILE
 
 # Prepare Git and commit file
+GIT_ORIGIN="https://${GIT_USERNAME}:${TOKEN}@github.com/${GIT_REPO_REMOTE}"
+
 git config user.name ${GIT_USER}
 git config user.email ${GIT_EMAIL}
-git remote rm origin
-git remote add origin https://${GIT_USERNAME}:${TOKEN}@github.com/${GIT_REPO_REMOTE}
-git pull origin master
+git pull ${GIT_ORIGIN} master
 git add ${COMMENT_FILE}
-git commit -m "Automatic upload of comment"
-git push --quiet origin master > /dev/null 2>&1
+git commit -m "New comment (Jekyll Discuss)"
+git push --quiet ${GIT_ORIGIN} master > /dev/null 2>&1
