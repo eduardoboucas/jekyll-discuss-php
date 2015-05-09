@@ -52,10 +52,10 @@ TOKEN=`cat .gittoken`
 # Read config file
 source config
 
-FILE="name: ${NAME}\ndate: ${DATE}\nhash: ${EMAIL_HASH}\n"
+FILE="name: \"${NAME}\"\ndate: \"${DATE}\"\nhash: ${EMAIL_HASH}\n"
 
 if [ ! -z "$URL" ]; then
-    FILE=${FILE}"url: ${URL}\n"
+    FILE=${FILE}"url: \"${URL}\"\n"
 fi
 
 FILE=${FILE}"message: \"${MESSAGE}\"\n"
