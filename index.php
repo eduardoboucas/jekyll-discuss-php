@@ -2,8 +2,13 @@
 require 'vendor/autoload.php';
 require 'lib/readConfig.php';
 
+use Flintstone\Flintstone;
+use Mailgun\Mailgun;
+
 // Read config file
 $config = readConfig('config');
+
+var_dump($config); die();
 
 if ($config === FALSE) {
     die('Config file not found');
@@ -35,6 +40,12 @@ $app->post('/comments', function () use ($app) {
     // Create email hash
     $emailHash = md5(trim(strtolower($data['email'])));
 
+    // Add subscription if applicable
+    $subscriptions = Flintstone::load('subscriptions', array('dir' => ''));
+    if (isset($data['subscribe'])) {
+
+    }
+
     // Parse markdown
     $message = Parsedown::instance()
                 ->setMarkupEscaped(true)
@@ -52,7 +63,7 @@ $app->post('/comments', function () use ($app) {
         $shellCommand .= ' --url ' . escapeshellarg($data['url']);
     }
 
-    exec($shellCommand, $output);
+    //exec($shellCommand, $output);
 
     $response['hash'] = $emailHash;
     $response['date'] = $date;

@@ -1,6 +1,8 @@
 {
     "require": {
         "slim/slim": "^2.6",
-        "erusev/parsedown": "dev-master"
+        "erusev/parsedown": "dev-master",
+        "fire015/flintstone": "1.*",
+        "mailgun/mailgun-php": "~1.7.2"
     }
 }

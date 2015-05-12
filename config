@@ -6,3 +6,11 @@ GIT_EMAIL="mail@eduardoboucas.com"
 
 COMMENTS_DIR_FORMAT="_data/comments/@post-slug"
 COMMENTS_FILE_FORMAT="@timestamp-@hash.yml"
+
+SUBSCRIPTIONS_PATH="/Users/eboucas/Sites/jekyll-discuss/db"
+
+MAILGUN_KEY="key-4e3c9c26a304fd2a3ca8e2b86363ea52"
+MAILGUN_DOMAIN="bouc.as"
+
+NOTIFICATION_SUBJECT=""
+NOTIFICATION_BODY="Hi @first-name,<br><br>Someone else commented on the post \"@post\" that you subscribed to.<br><a href=\"\">Click here</a> to see what's up"
