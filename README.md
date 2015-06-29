@@ -7,7 +7,7 @@ All the information about this project is described in [this blog post](https://
 
 ## Installation
 
-> Before you start the installation, you need to know the primary group of your web server's user. If you're using Apache, try `groups apache` our `groups www`. For these instructions, we'll use `apache` as the web server's group and `ec2-user` as the regular user.
+> Before you start the installation, you need to know the primary group of your web server's user. If you're using Apache, try `groups apache` or `groups www`. For these instructions, we'll use `apache` as the web server's group and `ec2-user` as the regular user.
 
 1) Install dependencies with Composer
 
