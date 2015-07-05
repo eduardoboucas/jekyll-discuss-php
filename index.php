@@ -15,7 +15,7 @@ if (!$config) {
 // Start Slim
 $app = new \Slim\Slim();
 
-$app->post('/comments', function () use ($app) {
+$app->post('/comments', function () use ($app, $config) {
     $data = array_map('trim', $app->request()->post());
 
     // Checking for the honey pot
@@ -76,7 +76,7 @@ $app->post('/comments', function () use ($app) {
         'from'    => $config['MAILGUN_FROM'], 
         'to'      => $config['MAILGUN_TO'], 
         'subject' => $message['subject'], 
-        'text'    => $message['message']
+        'html'    => $message['message']
     ));
 });
 
