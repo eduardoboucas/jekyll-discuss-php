@@ -70,7 +70,7 @@ $app->post('/comments', function () use ($app, $config) {
 
     // Send Mailgun notification
     $mailgun = new Mailgun\Mailgun($config['MAILGUN_KEY']);
-    $message = mailgunMessage($data['name'], $data['post']);
+    $message = mailgunMessage($data['name'], $data['url']);
 
     $mailgun->sendMessage($config['MAILGUN_DOMAIN'], array(
         'from'    => $config['MAILGUN_FROM'], 
