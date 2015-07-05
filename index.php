@@ -2,6 +2,8 @@
 require 'vendor/autoload.php';
 require 'lib/readConfig.php';
 
+define('CONFIG_FILE', '/var/opt/jekyll-discuss/config');
+
 // Read config file
 $config = readConfig('config');
 
@@ -21,10 +23,10 @@ $app->post('/comments', function () use ($app) {
     }
 
     // Checking for mandatory fields
-    if ((!isset($data['name'])) ||
-        (!isset($data['email'])) ||
-        (!isset($data['message'])) ||
-        (!isset($data['post'])))
+    if ((!isset($data['name']) || empty($data['name'])) ||
+        (!isset($data['email']) || empty($data['email'])) ||
+        (!isset($data['message']) || empty($data['message'])) ||
+        (!isset($data['post']) || empty($data['post'])))
     {
         echo('Mandatory fields are missing.');
         return;
@@ -42,6 +44,7 @@ $app->post('/comments', function () use ($app) {
                 ->text($data['message']);
 
     $shellCommand = './new-comment.sh';
+    $shellCommand .= ' --config \'' . CONFIG_FILE . '\'';
     $shellCommand .= ' --name ' . escapeshellarg($data['name']);
     $shellCommand .= ' --date ' . escapeshellarg($date);
     $shellCommand .= ' --hash \'' . $emailHash . '\'';
