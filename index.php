@@ -5,7 +5,7 @@ require 'lib/readConfig.php';
 define('CONFIG_FILE', '/var/opt/jekyll-discuss/config');
 
 // Read config file
-$config = readConfig('config');
+$config = readConfig(CONFIG_FILE);
 
 if ($config === FALSE) {
     die('Config file not found');
