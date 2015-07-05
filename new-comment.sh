@@ -4,6 +4,10 @@ do
 key="$1"
 
 case $key in
+    -c|--config)
+    CONFIG_FILE="$2"
+    shift
+    ;;
     -p|--post)
     POST_SLUG="$2"
     shift
@@ -46,11 +50,8 @@ esac
 shift
 done
 
-# Read Git token
-TOKEN=`cat .gittoken`
-
 # Read config file
-source config
+source ${CONFIG_FILE}
 
 FILE="name: \"${NAME}\"\ndate: \"${DATE}\"\nhash: ${EMAIL_HASH}\n"
 
@@ -84,7 +85,7 @@ fi
 printf "$FILE" > $COMMENT_FILE
 
 # Prepare Git and commit file
-GIT_ORIGIN="https://${GIT_USERNAME}:${TOKEN}@github.com/${GIT_REPO_REMOTE}"
+GIT_ORIGIN="https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/${GIT_REPO_REMOTE}"
 
 git config user.name ${GIT_USER}
 git config user.email ${GIT_EMAIL}
