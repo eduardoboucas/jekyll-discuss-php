@@ -1,13 +1,14 @@
 <?php
+
 require 'vendor/autoload.php';
-require 'lib/readConfig.php';
+include 'templates/mailgun.template.php';
 
 define('CONFIG_FILE', '/var/opt/jekyll-discuss/config');
 
 // Read config file
-$config = readConfig(CONFIG_FILE);
+$config = parse_ini_file(CONFIG_FILE);
 
-if ($config === FALSE) {
+if (!$config) {
     die('Config file not found');
 }
 
@@ -15,7 +16,7 @@ if ($config === FALSE) {
 $app = new \Slim\Slim();
 
 $app->post('/comments', function () use ($app) {
-    $data = $app->request()->post();
+    $data = array_map('trim', $app->request()->post());
 
     // Checking for the honey pot
     if ((isset($data['company'])) && (!empty($data['company']))) {
@@ -43,6 +44,7 @@ $app->post('/comments', function () use ($app) {
                 ->setUrlsLinked(false)
                 ->text($data['message']);
 
+    // Prepare shell command
     $shellCommand = './new-comment.sh';
     $shellCommand .= ' --config \'' . CONFIG_FILE . '\'';
     $shellCommand .= ' --name ' . escapeshellarg($data['name']);
@@ -55,13 +57,27 @@ $app->post('/comments', function () use ($app) {
         $shellCommand .= ' --url ' . escapeshellarg($data['url']);
     }
 
+    // Run shell command
     exec($shellCommand, $output);
 
+    // Prepare response
     $response['hash'] = $emailHash;
     $response['date'] = $date;
     $response['message'] = $message;
 
+    // Send response
     echo(json_encode($response));
+
+    // Send Mailgun notification
+    $mailgun = new Mailgun\Mailgun($config['MAILGUN_KEY']);
+    $message = mailgunMessage($data['name'], $data['post']);
+
+    $mailgun->sendMessage($config['MAILGUN_DOMAIN'], array(
+        'from'    => $config['MAILGUN_FROM'], 
+        'to'      => $config['MAILGUN_TO'], 
+        'subject' => $message['subject'], 
+        'text'    => $message['message']
+    ));
 });
 
 $app->run();
