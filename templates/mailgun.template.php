@@ -3,11 +3,10 @@
 function mailgunMessage($name, $url) {
 	$subject = 'New comment on Eduardo saying things';
 
-	$message = 'Hi,<br><br>';
-	$message .= 'There\'s a new comment in Eduardo saying things, by ' . $name . '.<br><br>';
-	$message .= 'Click <a href="' . $url . '">here</a> to see it.<br><br>';
+	$message = 'Hi there,<br><br>';
+	$message .= $name . ' just commented on <em>Eduardo saying things</em>. Click <a href="https://eduardoboucas.com/blog' . $url . '">here</a> to see it.<br><br>';
 	$message .= 'Best,<br>';
-	$message .= '-- You';
+	$message .= 'You';
 
 	return array('subject' => $subject, 'message' => $message);
 }

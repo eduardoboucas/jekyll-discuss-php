@@ -15,7 +15,7 @@ if (!$config) {
 // Start Slim
 $app = new \Slim\Slim();
 
-$app->post('/comments', function () use ($app) {
+$app->post('/comments', function () use ($app, $config) {
     $data = array_map('trim', $app->request()->post());
 
     // Checking for the honey pot
@@ -70,13 +70,13 @@ $app->post('/comments', function () use ($app) {
 
     // Send Mailgun notification
     $mailgun = new Mailgun\Mailgun($config['MAILGUN_KEY']);
-    $message = mailgunMessage($data['name'], $data['post']);
+    $message = mailgunMessage($data['name'], $data['url']);
 
     $mailgun->sendMessage($config['MAILGUN_DOMAIN'], array(
         'from'    => $config['MAILGUN_FROM'], 
         'to'      => $config['MAILGUN_TO'], 
         'subject' => $message['subject'], 
-        'text'    => $message['message']
+        'html'    => $message['message']
     ));
 });
 
