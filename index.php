@@ -90,37 +90,41 @@ $app->post('/comments', function () use ($app, $config) {
     $mailer = new Mailman($config['MAILGUN_KEY'], $config['MAILGUN_DOMAIN'], $config['MAILGUN_FROM']);
 
     // Read subscription data
-    $subscriptions = Flintstone\Flintstone::load($data['post'], array('dir' => $config['SUBSCRIPTIONS_DATABASE']));
-    $subscribers = $subscriptions->getKeys();
+    $newSubscription = isset($data['subscribe']) && ($data['subscribe'] == 'subscribe');
 
-    // Emailing subscribers (and not the author of the comment)
-    foreach ($subscribers as $subscriber) {
-        $subscription = $subscriptions->get($subscriber);
+    if (file_exists($config['SUBSCRIPTIONS_DATABASE'] . '/' . $data['post'] . '.dat') || $newSubscription) {
+        $subscriptions = Flintstone\Flintstone::load($data['post'], array('dir' => $config['SUBSCRIPTIONS_DATABASE']));
+        $subscribers = $subscriptions->getKeys();
 
-        if ($subscription['email'] != $data['email']) {
-            $mailer->send($subscription['email'], 'New comment', file_get_contents('templates/new-comment.html'), array(
-                '{{ subscriber }}' => $subscription['name'],
-                '{{ commenter }}' => $data['name'],
-                '{{ link }}' => $data['post-url'],
-                '{{ unsubscribe }}' => 'https://aws.bouc.as/jekyll-discuss/unsubscribe/' . $data['post'] .  '/' . $subscriber
-            ));            
+        // Emailing subscribers (and not the author of the comment)
+        foreach ($subscribers as $subscriber) {
+            $subscription = $subscriptions->get($subscriber);
+
+            if ($subscription['email'] != $data['email']) {
+                $mailer->send($subscription['email'], 'New comment', file_get_contents('templates/new-comment.html'), array(
+                    '{{ subscriber }}' => $subscription['name'],
+                    '{{ commenter }}' => $data['name'],
+                    '{{ link }}' => $data['post-url'],
+                    '{{ unsubscribe }}' => 'https://aws.bouc.as/jekyll-discuss/unsubscribe/' . $data['post'] .  '/' . $subscriber
+                ));            
+            }
         }
-    }
 
-    // Emailing admin
-    if ($config['SUBSCRIPTIONS_EMAIL_ADMIN']) {
-        $mailer->send($config['SUBSCRIPTIONS_ADMIN_ADDRESS'], 'New comment', file_get_contents('templates/admin-new-comment.html'), array(
-            '{{ commenter }}' => $data['name'],
-            '{{ link }}' => $data['post-url']
-        ));
-    }
-       
-    // Adding a new subscription if necessary
-    if (isset($data['subscribe']) && ($data['subscribe'] == 'subscribe')) {
-        $subscriptions->set(md5($emailHash . $date), array(
-            'email' => $data['email'], 
-            'name' => $data['name']
-        ));
+        // Emailing admin
+        if ($config['SUBSCRIPTIONS_EMAIL_ADMIN']) {
+            $mailer->send($config['SUBSCRIPTIONS_ADMIN_ADDRESS'], 'New comment', file_get_contents('templates/admin-new-comment.html'), array(
+                '{{ commenter }}' => $data['name'],
+                '{{ link }}' => $data['post-url']
+            ));
+        }
+           
+        // Adding a new subscription if necessary
+        if ($newSubscription) {
+            $subscriptions->set(md5($emailHash . $date), array(
+                'email' => $data['email'], 
+                'name' => $data['name']
+            ));
+        }
     }
 });
 
