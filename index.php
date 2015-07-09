@@ -1,19 +1,35 @@
 <?php
 
 require 'vendor/autoload.php';
-include 'templates/mailgun.template.php';
+require 'lib/Mailman.class.php';
 
 define('CONFIG_FILE', '/var/opt/jekyll-discuss/config');
 
 // Read config file
-$config = parse_ini_file(CONFIG_FILE);
-
-if (!$config) {
+if (!$config = parse_ini_file(CONFIG_FILE)) {
     die('Config file not found');
 }
 
 // Start Slim
 $app = new \Slim\Slim();
+
+$app->get('/unsubscribe/:post/:subscriber', function ($post, $subscriber) use ($config) {
+    $subscriptions = Flintstone\Flintstone::load($post, array('dir' => $config['SUBSCRIPTIONS_DATABASE']));
+    $removed = false;
+
+    if (file_exists($config['SUBSCRIPTIONS_DATABASE'] . '/' . $post . '.dat')) {
+        if ($subscriptions->get($subscriber)) {
+            $subscriptions->delete($subscriber);
+            $removed = true;
+        }
+    }
+
+    if ($removed) {
+        echo('Subscription removed!');
+    } else {
+        echo('Oops, something went wrong here.');
+    }
+});
 
 $app->post('/comments', function () use ($app, $config) {
     $data = array_map('trim', $app->request()->post());
@@ -27,12 +43,14 @@ $app->post('/comments', function () use ($app, $config) {
     if ((!isset($data['name']) || empty($data['name'])) ||
         (!isset($data['email']) || empty($data['email'])) ||
         (!isset($data['message']) || empty($data['message'])) ||
+        (!isset($data['post-url']) || empty($data['post-url'])) ||
         (!isset($data['post']) || empty($data['post'])))
     {
         echo('Mandatory fields are missing.');
         return;
     }
 
+    // Grab current date
     $date = date('M d, Y, g:i a');
 
     // Create email hash
@@ -68,16 +86,40 @@ $app->post('/comments', function () use ($app, $config) {
     // Send response
     echo(json_encode($response));
 
-    // Send Mailgun notification
-    $mailgun = new Mailgun\Mailgun($config['MAILGUN_KEY']);
-    $message = mailgunMessage($data['name'], $data['post-url']);
+    // Prepare email notifications
+    $mailer = new Mailman($config['MAILGUN_KEY'], $config['MAILGUN_DOMAIN'], $config['MAILGUN_FROM']);
 
-    $mailgun->sendMessage($config['MAILGUN_DOMAIN'], array(
-        'from'    => $config['MAILGUN_FROM'], 
-        'to'      => $config['MAILGUN_TO'], 
-        'subject' => $message['subject'], 
-        'html'    => $message['message']
-    ));
+    // Read subscription data
+    $subscriptions = Flintstone\Flintstone::load($data['post'], array('dir' => $config['SUBSCRIPTIONS_DATABASE']));
+    $subscribers = $subscriptions->getKeys();
+
+    // Emailing subscribers (and not the author of the comment)
+    foreach ($subscribers as $subscriber) {
+        $subscription = $subscriptions->get($subscriber);
+
+        if ($subscription['email'] != $data['email']) {
+            $mailer->send($subscription['email'], 'New comment', file_get_contents('templates/new-comment.html'), array(
+                '{{ subscriber }}' => $subscription['name'],
+                '{{ commenter }}' => $data['name'],
+                '{{ link }}' => $data['post-url'],
+                '{{ unsubscribe }}' => 'https://aws.bouc.as/jekyll-discuss/unsubscribe/' . $data['post'] .  '/' . $subscriber
+            ));            
+        }
+    }
+
+    // Emailing myself
+    $mailer->send($subscription['email'], 'New comment', file_get_contents('templates/admin-new-comment.html'), array(
+        '{{ commenter }}' => $data['name'],
+        '{{ link }}' => $data['post-url']
+    ));    
+
+    // Adding a new subscription if necessary
+    if (isset($data['subscribe']) && ($data['subscribe'] == 'subscribe')) {
+        $subscriptions->set(md5($emailHash . $date), array(
+            'email' => $data['email'], 
+            'name' => $data['name']
+        ));
+    }
 });
 
 $app->run();
