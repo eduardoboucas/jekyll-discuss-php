@@ -12,14 +12,12 @@ class Mailman {
 			$message = str_replace($placeholder, $value, $message);
 		}
 
-		/*$this->mailgun->sendMessage($this->domain, array(
+		return $this->mailgun->sendMessage($this->domain, array(
 		    'from'    => $this->from,
 		    'to'      => $to,
 		    'subject' => $subject,
 		    'html'    => $message
-		));*/
-
-		print_r($message);
+		));
 	}
 }
 
