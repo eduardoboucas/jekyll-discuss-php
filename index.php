@@ -107,12 +107,14 @@ $app->post('/comments', function () use ($app, $config) {
         }
     }
 
-    // Emailing myself
-    $mailer->send($subscription['email'], 'New comment', file_get_contents('templates/admin-new-comment.html'), array(
-        '{{ commenter }}' => $data['name'],
-        '{{ link }}' => $data['post-url']
-    ));    
-
+    // Emailing admin
+    if ($config['SUBSCRIPTIONS_EMAIL_ADMIN']) {
+        $mailer->send($config['SUBSCRIPTIONS_ADMIN_ADDRESS'], 'New comment', file_get_contents('templates/admin-new-comment.html'), array(
+            '{{ commenter }}' => $data['name'],
+            '{{ link }}' => $data['post-url']
+        ));
+    }
+       
     // Adding a new subscription if necessary
     if (isset($data['subscribe']) && ($data['subscribe'] == 'subscribe')) {
         $subscriptions->set(md5($emailHash . $date), array(
