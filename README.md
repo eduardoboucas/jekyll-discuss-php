@@ -1,6 +1,8 @@
 # Jekyll Discuss
 > A commenting system for Jekyll
 
+**DEPRECATED:** This project is no longer maintained. Please see the [Node.js version](https://github.com/eduardoboucas/jekyll-discuss) instead.
+
 ## Introduction
 
 All the information about this project is described in [this blog post](https://eduardoboucas.com/blog/2015/05/11/rethinking-the-commenting-system-for-my-jekyll-site.html).
